@@ -3,11 +3,11 @@ outlets = 3;	// last data + N data + all data
 
 var dataCollection = [];
 var timeCollection = [];
-var time0 = 0.0;
+var time0 = 0;
 
 function reset(bang) {
 	var d = new Date();
-	time0 = d.getTime();	// reset timer
+	time0 = d.getTime();	// reset timer (ms)
 	timeCollection = [];	// reset time collection
 	dataCollection = [];	// reset data collection
 }
@@ -18,7 +18,7 @@ function pushData(data_) {
 			
 	// Get time
 	var d = new Date();
-	timeMs_ = d.getTime();
+	timeMs_ = d.getTime();	// current time in ms
 	timeMs_ -= time0;
 	timeCollection.push(timeMs_);
 	
