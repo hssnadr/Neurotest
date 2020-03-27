@@ -1,5 +1,5 @@
 inlets = 1;		// incoming data or bang action
-outlets = 4;	// Current angle + Range + all data + force carriage return for text file
+outlets = 6;	// Current angle + Range + mean angle + deviation + all data + force carriage return for text file
 
 var dataCollection = [];	// store all data to be export
 var timeCollection = [];
@@ -7,6 +7,8 @@ var oldGyrX = 0.0;
 var time0 = 0.0;
 var minAngle = 0.0;
 var maxAngle = 0.0;
+var meanAngl = 0.0;
+var deviation = 0.0;
 
 // User info
 var surname = "";
@@ -42,8 +44,10 @@ function dataManager(sdata_) {
 		t_ -= time0;			// offset to time start recording
 	
 		// Get gyroscope Euclidian norm
-		var gyrX_ = 10.0 * data_[3];
-	
+		var gyrX_ = -25.0 * data_[3];
+		
+		//---------------------------------------
+		
 		// Get current angle
 		var cAngle_ = 0.0;	// init at 0.0		
 		if(dataCollection.length > 0){
@@ -61,6 +65,8 @@ function dataManager(sdata_) {
 			cAngle_ *= 180.0 / Math.PI;
 			cAngle_ += oldAngl_;
 			
+			//---------------------------------------
+			
 			// Update range
 			if(cAngle_ > maxAngle) {
 				maxAngle = cAngle_;
@@ -74,6 +80,27 @@ function dataManager(sdata_) {
 			maxAngle = cAngle_;
 			minAngle = cAngle_;
 		}
+		
+		//---------------------------------------
+		// Computed values
+		
+		// Get mean
+		meanAngl = 0.0;
+		for(i=0; i < dataCollection.length; i++) {
+			meanAngl += dataCollection[i][1];	// add each angle
+		}
+		meanAngl /= dataCollection.length;
+		
+		// Get deviation
+		deviation = 0.0;
+		for(i=0; i < dataCollection.length; i++) {
+			deviation += Math.pow(dataCollection[i][1] - meanAngl, 2);
+		}
+		deviation /= dataCollection.length;
+		deviation = Math.sqrt(deviation);
+		
+		
+		//---------------------------------------
 	
 		// Store current data into data collection
 		var s_ = [t_, cAngle_];	// push computed data
@@ -83,6 +110,8 @@ function dataManager(sdata_) {
 		// Output data for real time display
 		outlet(0, cAngle_);
 		outlet(1, maxAngle - minAngle);
+		outlet(2, meanAngl);
+		outlet(3, deviation);
 		
 		// Update stored values
 		oldGyrX = gyrX_;
@@ -99,8 +128,8 @@ function pushAllFormatData(userInfo_) {
 	else{
 		surname = "-";
 	}
-	outlet(2, "Nom, " + surname);
-	outlet(3, ""); // carriage return
+	outlet(4, "Nom, " + surname);
+	outlet(5, ""); // carriage return
 	
 	// SURNAME
 	if(info_[1] != "Prénom"){
@@ -109,8 +138,8 @@ function pushAllFormatData(userInfo_) {
 	else{
 		nameUser = "-";
 	}
-	outlet(2, "Prénom, " + nameUser);
-	outlet(3, ""); // carriage return
+	outlet(4, "Prénom, " + nameUser);
+	outlet(5, ""); // carriage return
 	
 	// BIRTHDAY
 	if(info_[2] != "s"){
@@ -119,8 +148,8 @@ function pushAllFormatData(userInfo_) {
 	else{
 		birthday = "-";
 	}
-	outlet(2, "Date de naissance, " + birthday);
-	outlet(3, ""); // carriage return
+	outlet(4, "Date de naissance, " + birthday);
+	outlet(5, ""); // carriage return
 	
 	// GENDER
 	if(info_[3] != "s"){
@@ -129,8 +158,8 @@ function pushAllFormatData(userInfo_) {
 	else{
 		gender = "-";
 	}
-	outlet(2, "Sexe, " + gender);
-	outlet(3, ""); // carriage return
+	outlet(4, "Sexe, " + gender);
+	outlet(5, ""); // carriage return
 	
 	// HEIGHT
 	if(info_[4] != "s"){
@@ -139,8 +168,8 @@ function pushAllFormatData(userInfo_) {
 	else{
 		height = "-";
 	}
-	outlet(2, "Taille (cm), " + height);
-	outlet(3, ""); // carriage return
+	outlet(4, "Taille (cm), " + height);
+	outlet(5, ""); // carriage return
 	
 	// WEIGHT
 	if(info_[5] != "s"){
@@ -149,22 +178,37 @@ function pushAllFormatData(userInfo_) {
 	else{
 		weight = "-";
 	}
-	outlet(2, "Poids (kg), " + weight);
-	outlet(3, ""); // carriage return
+	outlet(4, "Poids (kg), " + weight);
+	outlet(5, ""); // carriage return
+	
+	//---------------------------------------
+	
+	// Computed data
+	var range_ = maxAngle - minAngle;
+	outlet(4, "Amplitude (°), " + range_);
+	outlet(5, ""); // carriage return
+	
+	outlet(4, "Moyenne (°), " + meanAngl);
+	outlet(5, ""); // carriage return
+	
+	outlet(4, "Ecart type (°), " + deviation);
+	outlet(5, ""); // carriage return
+	
+	//---------------------------------------
 	
 	// DATA UNITS
-	outlet(2, "time (s), angle (°), accX, accY, accZ, gyrX, gyrY, gyrZ");
-	outlet(3, ""); // carriage return
+	outlet(4, "time (s), angle (°), accX, accY, accZ, gyrX, gyrY, gyrZ");
+	outlet(5, ""); // carriage return
 	
-	// DATA
+	// RAW DATA
 	for(i=0; i<dataCollection.length; i++) {
 		for(j=0; j<dataCollection[i].length; j++) {
-			outlet(2, dataCollection[i][j]);		// send each stored data
+			outlet(4, dataCollection[i][j]);		// send each stored data
 			if(j < dataCollection[i].length-1){
-				outlet(2, ',');						// separated by comas
+				outlet(4, ',');						// separated by comas
 			}
 		}
-		outlet(3, ""); 									// and push carriage return between each data lines
+		outlet(5, ""); 									// and push carriage return between each data lines
 	}
 }
 
