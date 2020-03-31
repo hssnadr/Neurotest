@@ -2,7 +2,7 @@
 	"name" : "Neurotest",
 	"version" : 1,
 	"creationdate" : 3668512414,
-	"modificationdate" : 3668512590,
+	"modificationdate" : 3668520669,
 	"viewrect" : [ 25.0, 107.0, 300.0, 500.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
@@ -29,6 +29,11 @@
 		"other" : 		{
 			"Neurotest.maxproj" : 			{
 				"kind" : "project",
+				"local" : 1
+			}
+,
+			"icon.ico" : 			{
+				"kind" : "file",
 				"local" : 1
 			}
 
