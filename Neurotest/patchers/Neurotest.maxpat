@@ -45,7 +45,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 663.0, 253.0, 24.0, 24.0 ]
+					"patching_rect" : [ 654.0, 290.0, 24.0, 24.0 ]
 				}
 
 			}
@@ -56,8 +56,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 654.0, 339.0, 316.0, 22.0 ],
-					"text" : "loadmess H:/Github/Neuroswing/Neurotest/media/icon.ico"
+					"patching_rect" : [ 654.0, 339.0, 343.0, 22.0 ],
+					"text" : "loadmess H:/Github/Neuroswing/Neurotest/media/CRI_icon.ico"
 				}
 
 			}
@@ -83,7 +83,7 @@
 					"saved_object_attributes" : 					{
 						"allwindowsactive" : 0,
 						"appicon_mac" : "",
-						"appicon_win" : "H:/Github/Neuroswing/Neurotest/media/icon.ico",
+						"appicon_win" : "H:/Github/Neuroswing/Neurotest/media/CRI_icon.ico",
 						"audiosupport" : 1,
 						"bundleidentifier" : "com.mycompany.myprogram",
 						"cantclosetoplevelpatchers" : 1,
